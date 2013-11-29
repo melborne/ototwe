@@ -15,19 +15,7 @@ module OtoTwe
         es = Faye::EventSource.new(env, pin: KEEPALIVE_TIME)
         p [:open, es.url, es.last_event_id]
         EM.schedule do
-          @tweet_streamer.ontweet do |tweet|
-            begin
-              return nil unless tweet && tweet[:user]
-              user = tweet[:user][:screen_name]
-              tags = tweet[:entities][:hashtags]
-              sounds = parse_sound_tag(tags)
-              es.send(sounds)
-              puts "\e[32m#{user}\e[0m: #{text}"
-            rescue
-              nil
-            end
-          end
-          @tweet_streamer.listen
+          send_sound_tag_ontweet(es)
           
           trap("INT") do
             puts 'Caught sigint'
@@ -40,10 +28,25 @@ module OtoTwe
       end
     end
 
-    # "entities"=>{"hashtags"=>[{"text"=>"ototo", "indices"=>[3, 9]}, {"text"=>"C3", "indices"=>[10, 13]}],
+    def send_sound_tag_ontweet(es)
+      @tweet_streamer.ontweet do |tweet|
+        begin
+          return nil unless tweet && tweet[:user]
+          user = tweet[:user][:screen_name]
+          text = tweet[:text]
+          tags = tweet[:entities][:hashtags]
+          sounds = parse_sound_tags(tags)
+          es.send(sounds) if sounds
+          puts "\e[32m#{user}\e[0m: #{text}"
+        rescue
+          nil
+        end
+      end
+      @tweet_streamer.listen
+    end
+
     def parse_sound_tags(tags)
-      sound = tags.map { |t| t['text'] }
-                  .detect { |text| text.match /^[A-G][1-6]$/i } || ''
+      tags.map { |h| h[:text] }.detect { |text| text.match /^[A-G]b?[1-6]/i }
     end
   end
 end
