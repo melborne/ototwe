@@ -1,5 +1,5 @@
 require 'faye/websocket'
-require 'tweet_stream'
+require 'ototwe/tweet_stream'
 
 module OtoTwe
   class Backend
@@ -7,8 +7,7 @@ module OtoTwe
     def initialize(app, track_terms:[], auth:{})
       @app = app
       @clients = []
-      @tweet_streamer = TweetStream.new(auth)
-      @tweet_streamer.track_terms = track_terms
+      @tweet_streamer = TweetStream.new(track_terms: track_terms, auth: auth)
     end
     
     def call(env)
@@ -20,8 +19,9 @@ module OtoTwe
             begin
               return nil unless tweet && tweet[:user]
               user = tweet[:user][:screen_name]
-              text = tweet[:text]
-              es.send(parse_sound text)
+              tags = tweet[:entities][:hashtags]
+              sounds = parse_sound_tag(tags)
+              es.send(sounds)
               puts "\e[32m#{user}\e[0m: #{text}"
             rescue
               nil
@@ -38,6 +38,12 @@ module OtoTwe
       else
         @app.call(env)
       end
+    end
+
+    # "entities"=>{"hashtags"=>[{"text"=>"ototo", "indices"=>[3, 9]}, {"text"=>"C3", "indices"=>[10, 13]}],
+    def parse_sound_tags(tags)
+      sound = tags.map { |t| t['text'] }
+                  .detect { |text| text.match /^[A-G][1-6]$/i } || ''
     end
   end
 end
