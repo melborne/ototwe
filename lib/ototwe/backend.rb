@@ -1,5 +1,6 @@
 require 'faye/websocket'
 require 'ototwe/tweet_stream'
+require 'json'
 
 module OtoTwe
   class Backend
@@ -38,7 +39,8 @@ module OtoTwe
           tags = tweet[:entities][:hashtags]
           notes = parse_notes_in_tags(tags)
           notes = notes.map { |note| pick_a_file note }.compact
-          es.send(notes) unless notes.empty?
+          data = {user: user, text: text, notes: notes}.to_json
+          es.send(data) unless notes.empty?
           puts "\e[32m#{user}\e[0m: #{text}"
         rescue
           nil
