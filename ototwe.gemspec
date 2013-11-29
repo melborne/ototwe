@@ -8,8 +8,8 @@ Gem::Specification.new do |spec|
   spec.version       = Ototwe::VERSION
   spec.authors       = ["kyoendo"]
   spec.email         = ["postagie@gmail.com"]
-  spec.description   = %q{TODO: Write a gem description}
-  spec.summary       = %q{TODO: Write a gem summary}
+  spec.description   = %q{This is a demo app for websocket with tweets}
+  spec.summary       = %q{OtoTwe is a demo app for websocket with tweets}
   spec.homepage      = ""
   spec.license       = "MIT"
 
