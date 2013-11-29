@@ -18,6 +18,15 @@ Gem::Specification.new do |spec|
   spec.test_files    = spec.files.grep(%r{^(test|spec|features)/})
   spec.require_paths = ["lib"]
 
+  spec.add_dependency "sinatra"
+  spec.add_dependency "haml"
+  spec.add_dependency "puma"
+  spec.add_dependency "eventmachine"
+  spec.add_dependency "em-http-request"
+  spec.add_dependency "faye-websocket"
+  spec.add_dependency "simple_oauth"
+  spec.add_dependency "yajl-ruby"
+  spec.add_dependency "json"
   spec.add_development_dependency "bundler", "~> 1.3"
   spec.add_development_dependency "rake"
 end
