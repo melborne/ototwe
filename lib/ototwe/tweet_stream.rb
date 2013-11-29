@@ -6,10 +6,12 @@ class TweetStream
   URL = 'https://stream.twitter.com/1/statuses/filter.json'
 
   attr_accessor :track_terms
+  attr_reader :parser
   def initialize(track_terms:[], auth:{})
     @track_terms = track_terms
     @conn = EM::HttpRequest.new(URL, inactivity_timeout: 0)
     @conn.use EM::Middleware::OAuth, validate_auth(auth)
+    @parser = Yajl::Parser.new(symbolize_keys: true)
   end
   
   def ontweet(&blk)
@@ -17,7 +19,7 @@ class TweetStream
   end
 
   def listen
-    http = conn.post(track: @track_terms.join(','))
+    http = @conn.post(query: {track: @track_terms.join(',')})
     parser.on_parse_complete = @callback
     http.stream { |data| parser << data if data }
   rescue => e
@@ -32,9 +34,5 @@ class TweetStream
     else
       raise "Must pass oauth authenticate code"
     end
-  end
-  
-  def parser
-    @parser ||= Yajl::Parser.new(symbolize_key: true)
   end
 end
