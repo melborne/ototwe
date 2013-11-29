@@ -1,3 +1,3 @@
-require 'lib/app'
+require 'app'
 
 run OtoTwe::App
