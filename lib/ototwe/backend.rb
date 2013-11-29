@@ -15,7 +15,7 @@ module OtoTwe
         es = Faye::EventSource.new(env, pin: KEEPALIVE_TIME)
         p [:open, es.url, es.last_event_id]
         EM.schedule do
-          send_sound_tag_ontweet(es)
+          send_notes_ontweet(es)
           
           trap("INT") do
             puts 'Caught sigint'
@@ -28,15 +28,17 @@ module OtoTwe
       end
     end
 
-    def send_sound_tag_ontweet(es)
+    private
+    def send_notes_ontweet(es)
       @tweet_streamer.ontweet do |tweet|
         begin
           return nil unless tweet && tweet[:user]
           user = tweet[:user][:screen_name]
           text = tweet[:text]
           tags = tweet[:entities][:hashtags]
-          sounds = parse_sound_tags(tags)
-          es.send(sounds) if sounds
+          notes = parse_notes_in_tags(tags)
+          notes = notes.map { |note| pick_a_file note }.compact
+          es.send(notes) unless notes.empty?
           puts "\e[32m#{user}\e[0m: #{text}"
         rescue
           nil
@@ -45,8 +47,17 @@ module OtoTwe
       @tweet_streamer.listen
     end
 
-    def parse_sound_tags(tags)
-      tags.map { |h| h[:text] }.detect { |text| text.match /^[A-G]b?[1-6]/i }
+    def parse_notes_in_tags(tags)
+      tags.map { |h| h[:text].scan /[A-G]b?[1-6]/i }.flatten
+    end
+
+    def pick_a_file(note)
+      sound_files.select { |f| f.match /^#{note}/i }.sample
+    end
+
+    def sound_files
+      path = File.expand_path(File.join(__dir__, '..', 'public/sound'))
+      Dir["#{path}/*.wav"].map { |path| File.basename path, '.wav' }
     end
   end
 end
