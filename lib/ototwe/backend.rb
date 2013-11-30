@@ -30,6 +30,11 @@ module OtoTwe
           es = nil
         end
 
+        es.on :error do |event|
+          data = {clients: @clients.size}.to_json
+          @clients.each { |client| client.send data }
+        end
+
         EM.schedule do
           send_notes_ontweet(es)
           
