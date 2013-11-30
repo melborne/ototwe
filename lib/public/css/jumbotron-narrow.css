@@ -39,6 +39,8 @@ body {
 }
 .marketing {
     margin: 40px 0;
+    font-size: 16px;
+    text-align: center;
 }
 .marketing p + h4 {
     margin-top: 28px;

@@ -1,10 +1,10 @@
 #audience {
   border: none;
-  background-color: #555;
+  background-color: #666;
   color: yellow;
   font-size: 16pt;
   width: 50px;
-  text-align: right;
+  text-align: center;
 }
 
 #audienceLabel {
@@ -14,4 +14,16 @@
 
 .tweet{
   text-align: center;
+}
+
+.caution {
+  color: #777;
+}
+
+.footer #credit {
+  float: left;
+}
+
+.footer #descript {
+  float: right;
 }
