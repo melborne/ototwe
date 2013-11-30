@@ -1,0 +1,21 @@
+#audience {
+  border: none;
+  background-color: #555;
+  color: yellow;
+  font-size: 16pt;
+  width: 50px;
+  text-align: right;
+}
+
+#audienceLabel {
+  margin-left: 5px;
+  font-size: 14pt;
+}
+
+.tweet{
+  text-align: center;
+}
+
+.footer {
+/*  text-align: center;*/
+}
