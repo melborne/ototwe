@@ -14,7 +14,22 @@ module OtoTwe
     def call(env)
       if Faye::EventSource.eventsource?(env)
         es = Faye::EventSource.new(env, pin: KEEPALIVE_TIME)
-        p [:open, es.url, es.last_event_id]
+
+        es.on :open do |event|
+          p [:open, es.url, es.last_event_id]
+          @clients << es
+          data = {clients: @clients.size}.to_json
+          @clients.each { |client| client.send data }
+        end
+
+        es.on :close do |event|
+          p [:close, es.url, es.last_event_id]
+          @clients.delete(es)
+          data = {clients: @clients.size}.to_json
+          @clients.each { |client| client.send data }
+          es = nil
+        end
+
         EM.schedule do
           send_notes_ontweet(es)
           
@@ -40,7 +55,7 @@ module OtoTwe
           notes = parse_notes_in_tags(tags)
           notes = notes.map { |note| pick_a_file note }.compact
           data = {user: user, text: text, notes: notes}.to_json
-          es.send(data) unless notes.empty?
+          @clients.each { |client| client.send data } unless notes.empty?
           puts "\e[32m#{user}\e[0m: #{text}"
         rescue
           nil
