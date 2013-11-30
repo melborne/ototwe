@@ -15,3 +15,4 @@ test/tmp
 test/version_tmp
 tmp
 auth.yaml
+.DS_Store
