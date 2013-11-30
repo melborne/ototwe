@@ -10,7 +10,7 @@ rescue Errno::ENOENT
     access_token: ENV['TWITTER_ACCESS_TOKEN'],
     access_token_secret: ENV['TWITTER_ACCESS_TOKEN_SECRET'] }
 end
-terms = ['#ototo']
+terms = ['#ototwe']
 
 use OtoTwe::Backend, track_terms: terms, auth: read_auth
 
