@@ -77,9 +77,11 @@ module OtoTwe
       sound_files.select { |f| f.match /^#{note}/i }.sample
     end
 
-    def sound_files
-      path = File.expand_path(File.join(__dir__, '..', 'public/sound'))
-      Dir["#{path}/*.wav"].map { |path| File.basename path, '.wav' }
+    def sound_files(exts=%w(mp3 ogg), path=nil)
+      path = path || File.expand_path(File.join(__dir__, '..', 'public/sound'))
+      Dir["#{path}/*.#{exts.join(',')}"].map do |path|
+        File.basename path, ".#{exts.join(',')}"
+      end
     end
   end
 end
