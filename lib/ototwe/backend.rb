@@ -69,8 +69,8 @@ module OtoTwe
       @tweet_streamer.listen
     end
 
-    def parse_notes_in_tags(tags)
-      tags.map { |h| h[:text].scan /[A-G]b?[1-6]/i }.flatten
+    def parse_notes_in_tags(tags, pattern=/[A-G]b?[1-6][phm]?|X[1-7]/)
+      tags.map { |h| h[:text].scan pattern }.flatten
     end
 
     def pick_a_file(note)
