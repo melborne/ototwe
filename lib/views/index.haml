@@ -29,6 +29,9 @@
         #tweetInner
       .row.marketing
         %p.caution ∞ CAUTION SOUND LEVEL ∞
+        / %input{type:"button", value:"Play", onclick:"Sound.play(SAMPLE_URLS)"}
+        %input#volume{type:"range", value:"100", max:"100", min:"0"}
+        %p.caution Volume
       .footer
         %p#credit
           %span ©
@@ -36,8 +39,8 @@
           %span 2013
         %p#descript Tweet!  'hello! #ototwe #Eb3'
 
-
     %script{src:'js/jquery-2.0.3.min.js', type:'text/javascript'}
     %script{src:"//netdna.bootstrapcdn.com/bootstrap/3.0.2/js/bootstrap.min.js", type:'text/javascript'}
+    %script{src:'//cwilso.github.com/AudioContext-MonkeyPatch/AudioContextMonkeyPatch.js', type:'text/javascript'}
     %script{src:'js/buffer-loader.js', type:'text/javascript'}
     %script{src:'js/application.js', type:'text/javascript'}
